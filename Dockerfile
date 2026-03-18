@@ -16,7 +16,11 @@ RUN cd /comfyui && \
     pip install -r requirements.txt 2>/dev/null || true
 
 # --- Instalar dependencias de InstantID ---
-# insightface 0.7.3 is compatible with ComfyUI_InstantID (supports providers param)
+# Need build tools for insightface compilation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+RUN pip install cython numpy
 RUN pip install insightface==0.7.3 onnxruntime-gpu albumentations
 
 # --- Instalar nodos custom: InstantID ---
