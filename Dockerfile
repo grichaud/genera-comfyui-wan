@@ -4,32 +4,33 @@
 #
 # Modelo: Wan 2.2 TI2V-5B (Text+Image to Video, 5B params)
 # GPU: 24GB VRAM (A5000, L40, A6000)
-#
-# Este Dockerfile se construye automaticamente via GitHub Actions.
-# NO necesitas Docker instalado localmente.
 # =============================================================================
 
 FROM runpod/worker-comfyui:latest-base
 
+# --- Crear directorios necesarios ---
+RUN mkdir -p /comfyui/models/diffusion_models \
+    /comfyui/models/vae \
+    /comfyui/models/text_encoders \
+    /comfyui/models/clip_vision
+
 # --- Descargar modelos Wan 2.2 (ComfyUI Repackaged) ---
 
-# TI2V-5B: Text+Image to Video (principal)
-RUN wget -q --show-progress -O /comfyui/models/diffusion_models/wan2.2_ti2v_5b_fp16.safetensors \
-    "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_ti2v_5b_fp16.safetensors"
+# TI2V-5B: Text+Image to Video (principal, ~10GB)
+RUN wget -q -O /comfyui/models/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors \
+    "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors"
 
-# VAE
-RUN wget -q --show-progress -O /comfyui/models/vae/wan_2.2_vae.safetensors \
-    "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.2_vae.safetensors"
+# VAE (~200MB)
+RUN wget -q -O /comfyui/models/vae/wan2.2_vae.safetensors \
+    "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan2.2_vae.safetensors"
 
-# Text Encoder (UMT5-XXL FP8)
-RUN mkdir -p /comfyui/models/text_encoders && \
-    wget -q --show-progress -O /comfyui/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors \
+# Text Encoder UMT5-XXL FP8 (~5GB)
+RUN wget -q -O /comfyui/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors \
     "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors"
 
-# CLIP Vision (para image-to-video)
-RUN mkdir -p /comfyui/models/clip_vision && \
-    wget -q --show-progress -O /comfyui/models/clip_vision/clip_vision_h.safetensors \
-    "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors"
+# CLIP Vision (for image-to-video, ~1.2GB)
+RUN wget -q -O /comfyui/models/clip_vision/sigclip_vision_patch14_384.safetensors \
+    "https://huggingface.co/Comfy-Org/sigclip_vision_384/resolve/main/sigclip_vision_patch14_384.safetensors"
 
 # --- Copiar workflows pre-configurados ---
 COPY workflows/ /comfyui/workflows/

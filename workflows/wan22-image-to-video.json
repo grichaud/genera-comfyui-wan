@@ -25,20 +25,20 @@
   },
   "12": {
     "inputs": {
-      "unet_name": "wan2.2_ti2v_5b_fp16.safetensors",
+      "unet_name": "wan2.2_ti2v_5B_fp16.safetensors",
       "weight_dtype": "fp8_e4m3fn"
     },
     "class_type": "UNETLoader"
   },
   "13": {
     "inputs": {
-      "vae_name": "wan_2.2_vae.safetensors"
+      "vae_name": "wan2.2_vae.safetensors"
     },
     "class_type": "VAELoader"
   },
   "14": {
     "inputs": {
-      "clip_name": "clip_vision_h.safetensors"
+      "clip_name": "sigclip_vision_patch14_384.safetensors"
     },
     "class_type": "CLIPVisionLoader"
   },
