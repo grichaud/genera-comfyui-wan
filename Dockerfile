@@ -9,7 +9,10 @@
 FROM runpod/worker-comfyui:latest-base
 
 # --- Actualizar ComfyUI a la ultima version (incluye nodos nativos de Wan 2.2) ---
-RUN cd /comfyui && git pull origin master || git pull origin main
+RUN cd /comfyui && \
+    git fetch origin && \
+    git reset --hard origin/master 2>/dev/null || git reset --hard origin/main && \
+    pip install -r requirements.txt 2>/dev/null || true
 
 # --- Crear directorios necesarios ---
 RUN mkdir -p /comfyui/models/diffusion_models \
