@@ -16,7 +16,8 @@ RUN cd /comfyui && \
     pip install -r requirements.txt 2>/dev/null || true
 
 # --- Instalar dependencias de InstantID ---
-RUN pip install insightface onnxruntime-gpu
+# insightface 0.7.3 is compatible with ComfyUI_InstantID (supports providers param)
+RUN pip install insightface==0.7.3 onnxruntime-gpu albumentations
 
 # --- Instalar nodos custom: InstantID ---
 RUN cd /comfyui/custom_nodes && \
