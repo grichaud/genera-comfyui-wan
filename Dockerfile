@@ -9,7 +9,7 @@
 # NO necesitas Docker instalado localmente.
 # =============================================================================
 
-FROM runpod/worker-comfyui:3.6.0-base
+FROM runpod/worker-comfyui:5.8.3-base
 
 # --- Descargar modelos Wan 2.2 (ComfyUI Repackaged) ---
 
