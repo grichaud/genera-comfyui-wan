@@ -1,0 +1,90 @@
+{
+  "_comment": "Wan 2.2 Image-to-Video workflow for ComfyUI on RunPod. Input: image + prompt. Output: 5s video clip.",
+  "6": {
+    "inputs": {
+      "text": "A person standing naturally, slight gentle movement, cinematic lighting, professional quality",
+      "clip": ["15", 0]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "10": {
+    "inputs": {
+      "image": "input_image.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "11": {
+    "inputs": {
+      "width": 832,
+      "height": 480,
+      "length": 81,
+      "batch_size": 1
+    },
+    "class_type": "EmptyWanVideoLatent"
+  },
+  "12": {
+    "inputs": {
+      "unet_name": "wan2.2_ti2v_5b_fp16.safetensors",
+      "weight_dtype": "fp8_e4m3fn"
+    },
+    "class_type": "UNETLoader"
+  },
+  "13": {
+    "inputs": {
+      "vae_name": "wan_2.2_vae.safetensors"
+    },
+    "class_type": "VAELoader"
+  },
+  "14": {
+    "inputs": {
+      "clip_name": "clip_vision_h.safetensors"
+    },
+    "class_type": "CLIPVisionLoader"
+  },
+  "15": {
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "16": {
+    "inputs": {
+      "clip_vision": ["14", 0],
+      "image": ["10", 0],
+      "strength": 1.0
+    },
+    "class_type": "CLIPVisionEncode"
+  },
+  "20": {
+    "inputs": {
+      "model": ["12", 0],
+      "conditioning": ["6", 0],
+      "clip_vision_output": ["16", 0],
+      "latent_image": ["11", 0],
+      "seed": 42,
+      "steps": 30,
+      "cfg": 5.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1.0
+    },
+    "class_type": "WanSampler"
+  },
+  "30": {
+    "inputs": {
+      "samples": ["20", 0],
+      "vae": ["13", 0]
+    },
+    "class_type": "VAEDecode"
+  },
+  "40": {
+    "inputs": {
+      "images": ["30", 0],
+      "fps": 16,
+      "filename_prefix": "wan_output"
+    },
+    "class_type": "SaveAnimatedWEBP"
+  }
+}
